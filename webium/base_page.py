@@ -1,11 +1,12 @@
 from types import MethodType
 from waiting import TimeoutExpired
 from selenium.common.exceptions import WebDriverException
-
+from string import Template
 import webium.settings
 from webium.driver import get_driver
 from webium.wait import wait
 from webium.errors import WebiumException
+
 
 
 def is_element_present(self, element_name, just_in_dom=False, timeout=0):
@@ -52,6 +53,12 @@ class BasePage(object):
         if not self.url:
             raise WebiumException('Can\'t open page without url')
         self._driver.get(self.url)
+        
+    def open_with_params(self, params):
+        if not self.url:
+            raise WebiumException('Can\'t open page without url')
+        url = Template(self.url).safe_substitute(params)
+        self._driver.get(url)
 
     def find_element(self, *args):
         return self._driver.find_element(*args)
