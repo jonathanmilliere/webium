@@ -16,6 +16,12 @@ def get_driver_no_init():
     return _driver_instance
 
 
+def set_driver(driver):
+    global _driver_instance
+    _driver_instance = driver
+    _driver_instance.implicitly_wait(webium.settings.implicit_timeout)
+
+
 def close_driver():
     global _driver_instance
     if _driver_instance:
