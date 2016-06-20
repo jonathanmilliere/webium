@@ -8,46 +8,30 @@ from webium.wait import wait
 from webium.errors import WebiumException
 
 
-# def is_element_present(self, element_name, just_in_dom=False, timeout=0):
-#     def _get_driver():
-#         driver = getattr(self, '_driver', None)
-#         if driver:
-#             return driver
-#         return get_driver()
-#
-#     _get_driver().implicitly_wait(timeout)
-#     try:
-#         def is_displayed():
-#             element = getattr(self, element_name, None)
-#             if not element:
-#                 raise WebiumException('No element "%s" within container %s' % (element_name, self))
-#             return element.is_displayed()
-#
-#         is_displayed() if just_in_dom else wait(lambda: is_displayed(), timeout_seconds=timeout)
-#         return True
-#     except WebDriverException:
-#         return False
-#     except TimeoutExpired:
-#         return False
-#     finally:
-#         _get_driver().implicitly_wait(webium.settings.implicit_timeout)
+sentinel = object()
 
 
-def is_element_present(self, name, just_in_dom=False, timeout=0):
-    element_name_tab = name.split('.')
-    element_name = element_name_tab[1]
+def rgetattr(obj, attr, default=sentinel):
+    if default is sentinel:
+        _getattr = getattr
+    else:
+        def _getattr(obj, name):
+            return getattr(obj, name, default)
+    return functools.reduce(_getattr, [obj]+attr.split('.'))
 
+
+def is_element_present(self, element_name, just_in_dom=False, timeout=0):
     def _get_driver():
         driver = getattr(self, '_driver', None)
         if driver:
             return driver
         return get_driver()
+
     _get_driver().implicitly_wait(timeout)
     try:
-        element_parent = getattr(self, element_name_tab[0], None)
-
         def is_displayed():
-            element = getattr(element_parent, element_name, None)
+            # element = getattr(self, element_name, None)
+            element = rgetattr(self, element_name)
             if not element:
                 raise WebiumException('No element "%s" within container %s' % (element_name, self))
             return element.is_displayed()
