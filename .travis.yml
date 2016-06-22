@@ -1,6 +1,10 @@
 language: python
 python:
+  - "2.6"
   - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
 install:
   - pip install flake8
   - pip install .
@@ -11,3 +15,12 @@ before_script:
 script:
   - flake8
   - nosetests -v tests
+deploy:
+  provider: pypi
+  user: wg_webqaa
+  password:
+    secure: DcVhS0+ivUH80Nod578mpOGw0VWt+IatNnek5ALmMEJstt7NZWVuv8ZpknfLWqEoTGcChDcmqnM59uTwEykUqJxQY4PPlKab3sfntp08hTqssIJ2ikvRBeIrTsaUGyzu+jpa4x1bDRtQmcxzjH6JtT45QsCHnvWvOpjpTI34X/w=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: wgnet/webium
