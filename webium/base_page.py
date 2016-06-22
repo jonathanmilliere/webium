@@ -30,8 +30,7 @@ def is_element_present(self, element_name, just_in_dom=False, timeout=0):
     _get_driver().implicitly_wait(timeout)
     try:
         def is_displayed():
-            # element = getattr(self, element_name, None)
-            element = rgetattr(self, element_name)
+            element = rgetattr(self, element_name, None)
             if not element:
                 raise WebiumException('No element "%s" within container %s' % (element_name, self))
             return element.is_displayed()
