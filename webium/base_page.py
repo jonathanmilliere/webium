@@ -6,6 +6,7 @@ import webium.settings
 from webium.driver import get_driver
 from webium.wait import wait
 from webium.errors import WebiumException
+import functools
 
 
 sentinel = object()
